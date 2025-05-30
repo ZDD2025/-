@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub公开访问URL获取指南</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .header {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        .card {
+            background: rgba(0, 15, 46, 0.85);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 2px solid #00c6ff;
+            width: 100%;
+            max-width: 550px;
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .card-content {
+            padding: 25px;
+        }
+        
+        .step {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 40, 85, 0.5);
+            border-radius: 15px;
+            border-left: 4px solid #00c6ff;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .step-title {
+            display: inline-block;
+            font-size: 1.4rem;
+            color: #00c6ff;
+            margin-bottom: 15px;
+        }
+        
+        .step-content {
+            margin-left: 55px;
+        }
+        
+        .qr-section {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            margin: 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 1rem;
+        }
+        
+        .lab-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .preview-header {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .preview-content {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0 0 10px 10px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .plant-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(0, 40, 85, 0.7);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .plant-option:hover {
+            transform: translateX(10px);
+            background: rgba(0, 198, 255, 0.2);
+        }
+        
+        .plant-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        
+        .light-band {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .band-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+        
+        .band-uv { background: linear-gradient(to right, #6a0dad, #8a2be2); }
+        .band-blue { background: linear-gradient(to right, #00008b, #4169e1); }
+        .band-green { background: linear-gradient(to right, #006400, #32cd32); }
+        .band-red { background: linear-gradient(to right, #8b0000, #ff4500); }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 30px;
+            border-top: 1px solid #00c6ff;
+        }
+        
+        .tip-box {
+            background: rgba(255, 193, 7, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #FFC107;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .card {
+                width: 100%;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fab fa-github"></i> GitHub公开访问URL获取指南</h1>
+        <p class="subtitle">轻松部署光谱实验室，学生扫码即可使用</p>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">GitHub Pages部署步骤</h2>
+                <p>只需4步获取公开访问URL</p>
+            </div>
+            
+            <div class="card-content">
+                <div class="step">
+                    <div>
+                        <span class="step-number">1</span>
+                        <span class="step-title">创建新仓库</span>
+                    </div>
+                    <div class="step-content">
+                        <p>登录GitHub，点击右上角 ➕ 选择 "New repository"</p>
+                        <div class="tip-box">
+                            <i class="fas fa-lightbulb"></i> 仓库名称格式: yourusername.github.io
+                        </div>
+                        <p>勾选 "Initialize this repository with a README"</p>
+                        <img src="https://via.placeholder.com/500x200/007bff/ffffff?text=创建新仓库界面" style="width:100%;border-radius:8px;margin:10px 0;">
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div>
+                        <span class="step-number">2</span>
+                        <span class="step-title">上传HTML文件</span>
+                    </div>
+                    <div class="step-content">
+                        <p>在仓库页面，点击 "Add file" > "Upload files"</p>
+                        <p>将光谱实验室HTML文件拖拽到上传区域</p>
+                        <p>点击 "Commit changes" 保存</p>
+                        <div class="tip-box">
+                            <i class="fas fa-lightbulb"></i> 确保文件名为 index.html
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div>
+                        <span class="step-number">3</span>
+                        <span class="step-title">启用GitHub Pages</span>
+                    </div>
+                    <div class="step-content">
+                        <p>转到仓库 "Settings" > "Pages"</p>
+                        <p>在 "Source" 下选择分支为 "main"</p>
+                        <p>选择文件夹为 "/ (root)"</p>
+                        <p>点击 "Save"</p>
+                        <img src="https://via.placeholder.com/500x200/28a745/ffffff?text=GitHub+Pages设置界面" style="width:100%;border-radius:8px;margin:10px 0;">
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div>
+                        <span class="step-number">4</span>
+                        <span class="step-title">获取公开URL</span>
+                    </div>
+                    <div class="step-content">
+                        <p>等待1-2分钟，刷新页面</p>
+                        <p>在GitHub Pages设置区域，您将看到:</p>
+                        <div style="background:#333;padding:15px;border-radius:8px;margin:10px 0;">
+                            <code>https://yourusername.github.io</code>
+                        </div>
+                        <p>这就是您的公开访问URL！</p>
+                    </div>
+                </div>
+                
+                <div class="qr-section">
+                    <h3><i class="fas fa-qrcode"></i> 生成学生访问二维码</h3>
+                    <div class="qr-placeholder">访问URL后将显示二维码</div>
+                    <p>学生用手机扫描即可直接使用光谱实验室</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">光谱实验室预览</h2>
+                <p>学生扫码后将看到此界面</p>
+            </div>
+            
+            <div class="card-content">
+                <div class="lab-preview">
+                    <div class="preview-header">
+                        <h3><i class="fas fa-lightbulb"></i> 虚拟光谱实验室</h3>
+                        <p>探索光质对药用植物的影响</p>
+                    </div>
+                    
+                    <div class="preview-content">
+                        <h4><i class="fas fa-seedling"></i> 选择研究对象</h4>
+                        
+                        <div class="plant-option">
+                            <div class="plant-icon" style="background:linear-gradient(45deg, #d32f2f, #f44336);">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <div>
+                                <h4>丹参</h4>
+                                <p>酚酸B、丹参酮</p>
+                            </div>
+                        </div>
+                        
+                        <div class="plant-option">
+                            <div class="plant-icon" style="background:linear-gradient(45deg, #388e3c, #4caf50);">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <div>
+                                <h4>黄芪</h4>
+                                <p>黄酮、多糖</p>
+                            </div>
+                        </div>
+                        
+                        <h4><i class="fas fa-sun"></i> 选择光波段</h4>
+                        
+                        <div class="light-band">
+                            <div class="band-color band-uv"></div>
+                            <div>
+                                <h4>紫外线 (290-400nm)</h4>
+                                <p>抑制徒长，增厚叶片</p>
+                            </div>
+                        </div>
+                        
+                        <div class="light-band">
+                            <div class="band-color band-blue"></div>
+                            <div>
+                                <h4>蓝紫光 (400-510nm)</h4>
+                                <p>促进酚酸类物质合成</p>
+                            </div>
+                        </div>
+                        
+                        <div class="light-band">
+                            <div class="band-color band-green"></div>
+                            <div>
+                                <h4>绿黄光 (510-610nm)</h4>
+                                <p>无明显生理影响</p>
+                            </div>
+                        </div>
+                        
+                        <div class="light-band">
+                            <div class="band-color band-red"></div>
+                            <div>
+                                <h4>橙红光 (610-720nm)</h4>
+                                <p>促进生物碱合成</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tip-box">
+                    <h4><i class="fas fa-mobile-alt"></i> 移动端优化设计</h4>
+                    <p>此实验室专门为手机和平板设计，学生无需安装任何应用，扫描二维码即可开始实验</p>
+                </div>
+                
+                <div class="tip-box">
+                    <h4><i class="fas fa-graduation-cap"></i> 教学优势</h4>
+                    <ul style="margin-left:20px;margin-top:10px;">
+                        <li>零成本部署，无需服务器</li>
+                        <li>学生无需注册或登录</li>
+                        <li>实时更新，内容可随时修改</li>
+                        <li>全球可访问，无地域限制</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p><i class="fab fa-github"></i> GitHub Pages是为教育工作者提供的最佳免费托管解决方案</p>
+        <p>© 2025 教育技术中心 | 让知识触手可及</p>
+    </div>
+
+    <script>
+        // 模拟GitHub URL生成
+        function generateGitHubURL() {
+            const username = "yourusername";
+            const repo = "spectrum-lab";
+            return `https://${username}.github.io/${repo}/`;
+        }
+        
+        // 生成二维码（模拟）
+        function updateQRCode() {
+            const url = generateGitHubURL();
+            const qrPlaceholder = document.querySelector('.qr-placeholder');
+            qrPlaceholder.innerHTML = `
+                <div style="text-align:center;">
+                    <div style="font-size:3rem; margin-bottom:10px;"><i class="fas fa-qrcode"></i></div>
+                    <div>${url}</div>
+                </div>
+            `;
+        }
+        
+        // 页面加载时生成二维码
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(updateQRCode, 1000);
+        });
+    </script>
+</body>
+</html>
